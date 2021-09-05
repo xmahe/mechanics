@@ -16,13 +16,23 @@ class World:
         self.pixel_per_m = self.screen_y_px / self.screen_height_m
         self.lookat = (0,1)
         self.screen = pygame.display.set_mode((self.screen_x_px, self.screen_y_px))
+        self.interleaving = 20
 
     def add_node(self, node):
-        node.world = self
-        self.nodes.append(node)
+        if isinstance(node, list):
+            for node_ in node:
+                self.add_node(node_)
+            return node
+        else:
+            node.world = self
+            self.nodes.append(node)
         return node
 
     def add_interaction(self, interaction):
+        if isinstance(interaction, list):
+            for interaction_ in interaction:
+                self.add_interaction(interaction_)
+            return interaction
         interaction.world = self
         self.interactions.append(interaction)
         return interaction
@@ -42,10 +52,12 @@ class World:
 
     def tick(self):
         # Increase time and monitor framerate
-        fps_target = 60
-        dt = self.clock.tick(fps_target)*1e-3
-        fps_actual = 1/dt
+        fps_target = 30
+        dt = self.clock.tick(self.interleaving*fps_target)*1e-3
+        if dt == 0:
+            return (self.t, 1/fps_target)
+        fps_actual = 1/self.interleaving/dt
         if fps_actual < 0.75*fps_target:
-            print(f"warning fps actual low ({1/dt})")
+            print(f"warning fps actual low ({1/dt/self.interleaving})")
         self.t += dt
         return (self.t, dt)

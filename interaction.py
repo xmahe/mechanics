@@ -1,5 +1,6 @@
 import pygame
 from vector import *
+from node import *
 
 class Interaction():
     # Any physical interaction between two objects
@@ -24,8 +25,8 @@ class Spring(Interaction):
             n_hat = (self.a.p - self.b.p).normalise()
             j_hat = n_hat.rotate90CCW()
             distance = (self.a.p - self.b.p).length()
-            speed = (self.a.v.dot(n_hat) - self.b.v.dot(n_hat))
-            rotational_speed = (self.a.v.dot(j_hat) - self.b.v.dot(j_hat))/distance
+            speed = (self.a.v - self.b.v).dot(n_hat)
+            rotational_speed = (self.a.v - self.b.v).dot(j_hat)/distance
         except Vector.TooShort:
             return
 
@@ -85,6 +86,7 @@ class BoundingBox(Interaction):
         self.c = c
         self.d = d
         self.k = stiffness
+        self.υ = 0.3
     def apply(self):
         # Loop through all nodes and see if any node has passed through bounding box
         # Simple neighbourhood check first
@@ -128,9 +130,11 @@ class BoundingBox(Interaction):
             # Two options - if collision is high relative velocity, use momentum theory, otherwise, use normal forces
             spring_model = True
             if spring_model:
-                spring_force = n_hat.scale(self.k*distance)  # TODO add damping
-                self.cm.apply_force_at(spring_force.scale(-1), node.p)
-                node.apply_force(spring_force.scale(1))
+                abs_spring_force = self.k*distance
+                spring_force = n_hat.scale(abs_spring_force)  # TODO add damping
+                friction_force = n_hat.rotate90CCW().scale(self.υ*abs_spring_force)
+                self.cm.apply_force_at(spring_force.scale(-1) - friction_force, node.p)
+                node.apply_force(friction_force + spring_force.scale(1))
                 continue
             else:
                 continue
@@ -157,4 +161,31 @@ class BoundingBox(Interaction):
                       self.world.world_to_screen_transform(self.b.p),
                       self.world.world_to_screen_transform(self.c.p),
                       self.world.world_to_screen_transform(self.d.p)],
+            width = 2)
+
+
+def RopeBuilder(world, start, stop, N = 6):
+    from numpy import linspace
+    X = linspace(start.x, stop.x, N)
+    Y = linspace(start.y, stop.y, N)
+    L = (start-stop).length()
+    dL = L / (N - 1)
+    nodes = [Node(position = Vector(X[i], Y[i]), mass = 0.1, J = 0.1) for i in range(N)]
+    world.add_node(nodes)
+    rope = Rope(nodes)
+    world.add_interaction(rope)
+    for node in rope.nodes:
+        world.add_interaction(Gravity(node))
+    for i in range(N-1):
+        world.add_interaction(Spring(nodes[i], nodes[i+1], l0 = dL, stiffness_N_per_m = (N-1)*1e3, damping_Ns_per_m = 0, rotational_damping_Nm_per_rads= 0))
+    return rope
+
+class Rope(Interaction):
+    def __init__(self, nodes):
+        self.nodes = nodes
+    def apply(self):
+        pass
+    def draw(self):
+        pygame.draw.lines(self.world.screen, (200,200,200), closed = False,
+            points = [self.world.world_to_screen_transform(node.p) for node in self.nodes],
             width = 2)
