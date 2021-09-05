@@ -93,6 +93,8 @@ class BoundingBox(Interaction):
         x_max = max([self.a.p.x, self.b.p.x, self.c.p.x, self.d.p.x])
         y_max = max([self.a.p.y, self.b.p.y, self.c.p.y, self.d.p.y])
         close_nodes = [node for node in self.world.nodes if node.p.x < x_max and node.p.x > x_min and node.p.y < y_max and node.p.y > y_min]
+        close_nodes = [node for node in close_nodes if not id(node) == id(self.cm)]
+        #import pdb; pdb.set_trace()
         for node in close_nodes:
             def is_inside(p):
                 at = (self.b.p - self.a.p).cross(p - self.a.p) > 0
@@ -129,9 +131,9 @@ class BoundingBox(Interaction):
                 spring_force = n_hat.scale(self.k*distance)  # TODO add damping
                 self.cm.apply_force_at(spring_force.scale(-1), node.p)
                 node.apply_force(spring_force.scale(1))
-                return
+                continue
             else:
-                return
+                continue
 
             # TODO check speed and implement both methods, compare with virtual nodes in corners
             # 5. Mirror the particle position and velocity around the closest line, if the n_hat*velocity is negative

@@ -34,7 +34,7 @@ world.add_interaction(Spring(FixedNode(position = Vector(0.2, -0.3)), box_cm, st
 world.add_interaction(Gravity(box_cm))
 
 # Another, smaller, box
-small_cm = Node(position = Vector(-0.2, 2), velocity = Vector(0, 5), mass = 0.1, J = 2, ω=0)
+small_cm = Node(position = Vector(-0.2, 2), velocity = Vector(0, -0.8), mass = 15, J = 2, ω=0)
 world.add_interaction(
         BoundingBox(
             world.add_node(small_cm),
@@ -44,7 +44,7 @@ world.add_interaction(
             world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, +0.2))),
             ))
 
-world.add_interaction(Gravity(small_cm))
+#world.add_interaction(Gravity(small_cm))
 
 running = 1
 while running:
