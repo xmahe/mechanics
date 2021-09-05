@@ -87,17 +87,17 @@ class BoundingBox(Interaction):
     def apply(self):
         # Loop through all nodes and see if any node has passed through bounding box
         # Simple neighbourhood check first
-        x_min = min([self.a.x, self.b.x, self.c.x, self.d.x])
-        y_min = min([self.a.y, self.b.y, self.c.y, self.d.y])
-        x_max = max([self.a.x, self.b.x, self.c.x, self.d.x])
-        y_max = max([self.a.y, self.b.y, self.c.y, self.d.y])
+        x_min = min([self.a.p.x, self.b.p.x, self.c.p.x, self.d.p.x])
+        y_min = min([self.a.p.y, self.b.p.y, self.c.p.y, self.d.p.y])
+        x_max = max([self.a.p.x, self.b.p.x, self.c.p.x, self.d.p.x])
+        y_max = max([self.a.p.y, self.b.p.y, self.c.p.y, self.d.p.y])
         close_nodes = [node for node in self.world.nodes if node.p.x < x_max and node.p.x > x_min and node.p.y < y_max and node.p.y > y_min]
         for node in close_nodes:
             def is_inside(p):
-                at = (self.b - self.a).cross(p - self.a) > 0
-                bt = (self.c - self.b).cross(p - self.b) > 0
-                ct = (self.d - self.c).cross(p - self.c) > 0
-                dt = (self.a - self.d).cross(p - self.d) > 0
+                at = (self.b.p - self.a.p).cross(p - self.a.p) > 0
+                bt = (self.c.p - self.b.p).cross(p - self.b.p) > 0
+                ct = (self.d.p - self.c.p).cross(p - self.c.p) > 0
+                dt = (self.a.p - self.d.p).cross(p - self.d.p) > 0
                 return at == bt and at == ct and at == dt
             if not is_inside(node.p):
                 continue
@@ -105,16 +105,16 @@ class BoundingBox(Interaction):
             # There should be force in the normal direction of the box.
             # 1. Compute normal of every line
             normals = [
-                    (self.b - self.a).rotate90CCW().normalise(),
-                    (self.c - self.b).rotate90CCW().normalise(),
-                    (self.d - self.c).rotate90CCW().normalise(),
-                    (self.a - self.d).rotate90CCW().normalise()]
+                    (self.b.p - self.a.p).rotate90CCW().normalise(),
+                    (self.c.p - self.b.p).rotate90CCW().normalise(),
+                    (self.d.p - self.c.p).rotate90CCW().normalise(),
+                    (self.a.p - self.d.p).rotate90CCW().normalise()]
             # 2. Compute middle point of every line
             midpoints = [
-                    (self.a+self.b).scale(0.5),
-                    (self.b+self.c).scale(0.5),
-                    (self.c+self.d).scale(0.5),
-                    (self.d+self.a).scale(0.5)]
+                    (self.a.p+self.b.p).scale(0.5),
+                    (self.b.p+self.c.p).scale(0.5),
+                    (self.c.p+self.d.p).scale(0.5),
+                    (self.d.p+self.a.p).scale(0.5)]
             # 3. Compute normal dot (p - middle point of line) for every line
             distances = [normals[i].dot(midpoints[i] - node.p) for i in range(4)]
             # 4. The lowest value from step 3 is the line with the closest distance
@@ -133,9 +133,8 @@ class BoundingBox(Interaction):
 
     def draw(self):
         pygame.draw.lines(self.world.screen, (100,100,100), closed = True,
-            points = [self.world.world_to_screen_transform(self.a),
-                      self.world.world_to_screen_transform(self.b),
-                      self.world.world_to_screen_transform(self.c),
-                      self.world.world_to_screen_transform(self.d)],
+            points = [self.world.world_to_screen_transform(self.a.p),
+                      self.world.world_to_screen_transform(self.b.p),
+                      self.world.world_to_screen_transform(self.c.p),
+                      self.world.world_to_screen_transform(self.d.p)],
             width = 2)
-

@@ -23,7 +23,11 @@ world.add_interaction(Drag(freeball))
 # TODO make boundingbox consist of nodes instead
 
 # Add a box
-world.add_interaction(BoundingBox(Vector(1.2,0.6), Vector(1.1,-1.3), Vector(-1.4, -0.9), Vector(-0.8,1.6)))
+box_a = world.add_node(Node(position = Vector(+1.2, +0.6), velocity = Vector(0, 0), mass = 1))
+box_b = world.add_node(Node(position = Vector(+1.1, -1.3), velocity = Vector(0, 0), mass = 1))
+box_c = world.add_node(Node(position = Vector(-1.4, -0.9), velocity = Vector(0, 0), mass = 1))
+box_d = world.add_node(Node(position = Vector(-0.8, +1.6), velocity = Vector(0, 0), mass = 1))
+world.add_interaction(BoundingBox(box_a, box_b, box_c, box_d))
 
 running = 1
 while running:
