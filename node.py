@@ -2,9 +2,9 @@ import pygame
 from vector import *
 
 class Node:
-    def __init__(self, p, v, mass):
-        self.p = p
-        self.v = v
+    def __init__(self, position, velocity, mass):
+        self.p = position
+        self.v = velocity
         self.mass = mass
         self.f = Vector(0, 0)
         self.condition = None
@@ -29,8 +29,8 @@ class Node:
         pygame.draw.circle(self.world.screen, (10,10, 10), self.world.world_to_screen_transform(self.p), 5)
 
 class FixedNode(Node):
-    def __init__(self, p, m):
-        super().__init__(p, Vector(0, 0), m)
+    def __init__(self, position, mass):
+        super().__init__(position, Vector(0, 0), mass)
     def reset(self):
         pass
     def apply_force(self, f):

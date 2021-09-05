@@ -9,14 +9,14 @@ from world import *
 world = World()
 
 # Add a pendulum
-fixed    = world.add_node(FixedNode(Vector(0, 2),                1))
-pendulum = world.add_node(     Node(Vector(1, 2), Vector(0.1, 0), 1))
+fixed    = world.add_node(FixedNode(position = Vector(0, 2), mass = 1))
+pendulum = world.add_node(     Node(position = Vector(1, 2), velocity = Vector(0.1, 0), mass = 1))
 world.add_interaction(Gravity(pendulum))
 world.add_interaction(Drag(pendulum))
 world.add_interaction(Spring(fixed, pendulum))
 
 # Add a free ball
-freeball = world.add_node(Node(Vector(2, 3), Vector(-3, 3) , 1))
+freeball = world.add_node(Node(position = Vector(2, 3), velocity = Vector(-3, 3) , mass = 1))
 world.add_interaction(Gravity(freeball))
 world.add_interaction(Drag(freeball))
 
