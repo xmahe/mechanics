@@ -78,7 +78,8 @@ class Drag(Interaction):
             self.node.apply_force(v_hat.scale(drag))
 
 class BoundingBox(Interaction):
-    def __init__(self, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, or normal computations will be wrong
+    def __init__(self, cm, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, or normal computations will be wrong
+        self.cm = cm
         self.a = a
         self.b = b
         self.c = c
@@ -119,15 +120,32 @@ class BoundingBox(Interaction):
             distances = [normals[i].dot(midpoints[i] - node.p) for i in range(4)]
             # 4. The lowest value from step 3 is the line with the closest distance
             index = distances.index(min(distances))  # Search for minimum value item and return index O(n)
+            distance = distances[index]
+            midpoint = midpoints[index]
+            n_hat    = normals[index]
+            # Two options - if collision is high relative velocity, use momentum theory, otherwise, use normal forces
+            spring_model = True
+            if spring_model:
+                spring_force = n_hat.scale(self.k*distance)  # TODO add damping
+                self.cm.apply_force_at(spring_force.scale(-1), node.p)
+                node.apply_force(spring_force.scale(1))
+                return
+            else:
+                return
+
+            # TODO check speed and implement both methods, compare with virtual nodes in corners
             # 5. Mirror the particle position and velocity around the closest line, if the n_hat*velocity is negative
             normal_velocity = normals[index].dot(node.v)
             if normal_velocity > 0:
                 # don't do anything
                 return
-            damping = 0.10
+            damping = 0.30 # 0.10 equals 90% energy lost when bumping
             node.p = node.p + normals[index].scale(2*(midpoints[index] - node.p).dot(normals[index]))
             node.v = node.v - normals[index].scale(normal_velocity*(1+damping))
             # 6. Apply force to all nodes in bounding box? the center of mass of the box is used to also compute torque which are converted to forces as well
+            self.cm
+            #import pdb;pdb.set_trace()
+
 
         # TODO check if a line passes through a bounding box, or a bounding box with a bounding box
 

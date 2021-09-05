@@ -8,26 +8,43 @@ from world import *
 
 world = World()
 
-# Add a pendulum
-fixed    = world.add_node(FixedNode(position = Vector(0, 2), mass = 1))
-pendulum = world.add_node(     Node(position = Vector(1, 2), velocity = Vector(0.1, 0), mass = 1))
+## Add a pendulum
+fixed    = world.add_node(FixedNode(position = Vector(0, 2)))
+pendulum = world.add_node(     Node(position = Vector(1, 2.0), velocity = Vector(0.1, 0), mass = 1, J = 1))
 world.add_interaction(Gravity(pendulum))
 world.add_interaction(Drag(pendulum))
-world.add_interaction(Spring(fixed, pendulum))
+world.add_interaction(Spring(fixed, pendulum, l0 = 1.0))
 
 # Add a free ball
-freeball = world.add_node(Node(position = Vector(2, 3), velocity = Vector(-3, 3) , mass = 1))
+freeball = world.add_node(Node(position = Vector(0, 3), velocity = Vector(-0.1, 2) , mass = 5, J = 1))
 world.add_interaction(Gravity(freeball))
 world.add_interaction(Drag(freeball))
 
-# TODO make boundingbox consist of nodes instead
-
 # Add a box
-box_a = world.add_node(Node(position = Vector(+1.2, +0.6), velocity = Vector(0, 0), mass = 1))
-box_b = world.add_node(Node(position = Vector(+1.1, -1.3), velocity = Vector(0, 0), mass = 1))
-box_c = world.add_node(Node(position = Vector(-1.4, -0.9), velocity = Vector(0, 0), mass = 1))
-box_d = world.add_node(Node(position = Vector(-0.8, +1.6), velocity = Vector(0, 0), mass = 1))
-world.add_interaction(BoundingBox(box_a, box_b, box_c, box_d))
+box_cm = Node(position = Vector(0.2, -0.3), velocity = Vector(0.0, 0.0).scale(0), mass = 10, J = 50, ω = -0.0)
+world.add_interaction(
+        BoundingBox(
+            world.add_node(box_cm),
+            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.2, +0.6))),
+            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.1, -1.3))),
+            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-1.4, -0.9))),
+            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-0.8, +1.6)))))
+
+world.add_interaction(Spring(FixedNode(position = Vector(0.2, -0.3)), box_cm, stiffness_N_per_m= 1000, rotational_damping_Nm_per_rads = 20, damping_Ns_per_m = 60, l0 = 0))
+world.add_interaction(Gravity(box_cm))
+
+# Another, smaller, box
+small_cm = Node(position = Vector(-0.2, 2), velocity = Vector(0, 5), mass = 0.1, J = 2, ω=0)
+world.add_interaction(
+        BoundingBox(
+            world.add_node(small_cm),
+            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, +0.2))),
+            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, -0.2))),
+            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, -0.2))),
+            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, +0.2))),
+            ))
+
+world.add_interaction(Gravity(small_cm))
 
 running = 1
 while running:

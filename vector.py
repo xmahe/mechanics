@@ -1,3 +1,5 @@
+from math import sin, cos
+
 class Vector:
     class TooShort(Exception):
         pass
@@ -27,3 +29,7 @@ class Vector:
         return Vector(-self.y, self.x)
     def rotate90CW(self):
         return Vector(self.y, -self.x)
+    def rotate(self, Θ):
+        c = cos(Θ)
+        s = sin(Θ)
+        return Vector(self.x*c - self.y*s, self.x*s + self.y*c)
