@@ -2,14 +2,12 @@ import pygame
 from vector import *
 
 class Node:
-    def __init__(self, world, p, v, mass):
+    def __init__(self, p, v, mass):
         self.p = p
         self.v = v
         self.mass = mass
         self.f = Vector(0, 0)
         self.condition = None
-        self.world = world
-        self.world.add_node(self)  # TODO DOES THIS BUG?
     def reset(self):
         self.f = Vector(0, 0)
     def apply_force(self, f):
@@ -31,8 +29,8 @@ class Node:
         pygame.draw.circle(self.world.screen, (10,10, 10), self.world.world_to_screen_transform(self.p), 5)
 
 class FixedNode(Node):
-    def __init__(self, world, p, m):
-        super().__init__(world, p, Vector(0, 0), m)
+    def __init__(self, p, m):
+        super().__init__(p, Vector(0, 0), m)
     def reset(self):
         pass
     def apply_force(self, f):

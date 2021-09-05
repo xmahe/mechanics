@@ -18,10 +18,14 @@ class World:
         self.screen = pygame.display.set_mode((self.screen_x_px, self.screen_y_px))
 
     def add_node(self, node):
+        node.world = self
         self.nodes.append(node)
+        return node
 
     def add_interaction(self, interaction):
+        interaction.world = self
         self.interactions.append(interaction)
+        return interaction
 
     def world_to_screen_transform(self, position_m):
         x_m = position_m.x

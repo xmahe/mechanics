@@ -11,15 +11,13 @@ class Interaction():
         pass
 
 class Spring(Interaction):
-    def __init__(self, world, node_a, node_b, stiffness_N_per_m = 1000, damping_Ns_per_m = 30, l0 = 1, rotational_damping_Nm_per_rads = 2.3):
+    def __init__(self, node_a, node_b, stiffness_N_per_m = 1000, damping_Ns_per_m = 30, l0 = 1, rotational_damping_Nm_per_rads = 2.3):
         self.a = node_a
         self.b = node_b
         self.k = stiffness_N_per_m
         self.l0 = l0
         self.damping_Ns_per_m = damping_Ns_per_m
         self.rotational_damping_Nm_per_rads = rotational_damping_Nm_per_rads
-        self.world = world
-        world.add_interaction(self)
     def apply(self):
         # Find the normal of the spring
         try:
@@ -43,18 +41,16 @@ class Spring(Interaction):
                 2)
 
 class Gravity(Interaction):
-    def __init__(self, world, node):
+    def __init__(self, node):
         self.node = node
-        world.add_interaction(self)
     def apply(self):
         g = 9.82
         gravity = Vector(0, -self.node.mass*g)
         self.node.apply_force(gravity)
 
 class Floor(Interaction):
-    def __init__(self, world, node):
+    def __init__(self, node):
         self.node = node
-        world.add_interaction(self)
     def apply(self):
         if self.node.p.y < 0:
             self.node.p.y = 0
@@ -65,12 +61,11 @@ class Floor(Interaction):
             self.node.v.x *= 0.95
 
 class Drag(Interaction):
-    def __init__(self, world, node, drag_coefficient = 0.1):
+    def __init__(self, node, drag_coefficient = 0.1):
         self.node = node
         self.drag_coefficient = drag_coefficient
         self.transition_speed = 1
         self.linear_drag = drag_coefficient*self.transition_speed
-        world.add_interaction(self)
     def apply(self):
         v = self.node.v.length()
         if v < 0.01:
@@ -83,14 +78,12 @@ class Drag(Interaction):
             self.node.apply_force(v_hat.scale(drag))
 
 class BoundingBox(Interaction):
-    def __init__(self, world, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, or normal computations will be wrong
+    def __init__(self, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, or normal computations will be wrong
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.k = stiffness
-        self.world = world
-        world.add_interaction(self)
     def apply(self):
         # Loop through all nodes and see if any node has passed through bounding box
         # Simple neighbourhood check first
