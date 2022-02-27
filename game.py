@@ -8,6 +8,10 @@ from drone import *
 
 world = World()
 
+#drone = Drone(world, RAW_MODE)
+#drone = Drone(world, ACRO_MODE)
+#drone = Drone(world, ACRO_ALTITUDE_MODE)
+#drone = Drone(world, STABILISED_MODE)
 drone = Drone(world, SPEED_MODE)
 
 while True:
