@@ -33,3 +33,5 @@ class Vector:
         c = cos(Θ)
         s = sin(Θ)
         return Vector(self.x*c - self.y*s, self.x*s + self.y*c)
+    def as_tuple(self):
+        return (self.x, self.y)

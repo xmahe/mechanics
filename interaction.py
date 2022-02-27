@@ -10,6 +10,10 @@ class Interaction():
         pass
     def draw(self):
         pass
+    def undraw(self):
+        pass
+    def handle_event(self, events):
+        pass
 
 class Spring(Interaction):
     def __init__(self, node_a, node_b, stiffness_N_per_m = 1000, damping_Ns_per_m = 30, l0 = 1, rotational_damping_Nm_per_rads = 2.3):
@@ -48,6 +52,46 @@ class Gravity(Interaction):
         g = 9.82
         gravity = Vector(0, -self.node.mass*g)
         self.node.apply_force(gravity)
+
+class Controllable(Interaction):
+    def __init__(self, node):
+        self.node = node
+        self.keys = []
+        self.accelerating_up = False
+        self.accelerating_down = False
+    def apply(self):
+        if self.accelerating_up:
+            self.node.apply_force(Vector(0,100))
+        if self.accelerating_down:
+            self.node.apply_force(Vector(0,-100))
+
+    def handle_event(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    self.accelerating_up = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    self.accelerating_up = False
+
+class Sprite(Interaction):
+    def __init__(self, node, filename):
+        self.node = node
+        self.image = pygame.image.load(filename).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.center = (-self.rect[2]/2, -self.rect[3]/2)
+    def apply(self):
+        pass
+    def draw(self):
+        x = self.world.world_to_screen_transform(self.node.p)
+        self.world.screen.blit(self.image, self.rect.move(x).move(self.center))
+    def undraw(self):
+        x = self.world.world_to_screen_transform(self.node.p)
+        y = self.rect.move(x)
+        self.world.screen.blit(self.world.background, y.move(self.center), y)
+    def handle_event(self, events):
+        pass
+
 
 class Floor(Interaction):
     def __init__(self, node):

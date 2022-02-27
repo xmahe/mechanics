@@ -80,6 +80,8 @@ class Node:
         if self.mass > 0:
             #pygame.draw.line(self.world.screen, (255,100,100), self.world.world_to_screen_transform(self.p), self.world.world_to_screen_transform(self.p + self.f.scale(1e-3/self.mass)), 2)
             pass
+    def undraw(self):
+        pygame.draw.circle(self.world.screen, (255,255,255), self.world.world_to_screen_transform(self.p), self.radius)
 
 class FixedNode(Node):
     def __init__(self, position):

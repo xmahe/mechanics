@@ -16,6 +16,9 @@ class World:
         self.pixel_per_m = self.screen_y_px / self.screen_height_m
         self.lookat = (0,1)
         self.screen = pygame.display.set_mode((self.screen_x_px, self.screen_y_px))
+        self.background = self.screen.copy()
+        self.background.fill((255,255,255))  # Set background to white TODO image?
+        self.screen.blit(self.background, (0,0))
         self.interleaving = 20
 
     def add_node(self, node):
