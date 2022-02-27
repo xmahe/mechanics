@@ -6,6 +6,7 @@ from node import *
 from interaction import *
 from world import *
 from drone import *
+from control_systems import *
 
 world = World()
 
@@ -17,12 +18,23 @@ world = World()
 #world.add_interaction(Spring(fixed, pendulum, l0 = 1.0))
 
 ## Add a "drone"
-freeball = world.add_node(Node(position = Vector(0, 3), velocity = Vector(-0.1, 2) , mass = 5, J = 1))
-world.add_interaction(Gravity(freeball))
-world.add_interaction(Drag(freeball))
-world.add_interaction(Floor(freeball))
-world.add_interaction(Controllable(freeball))
-world.add_interaction(Sprite(freeball, 'drone.png'))
+class Drone:
+    def __init__(self):
+        node = world.add_node(
+                Node(
+                    position = Vector(0, 3),
+                    velocity = Vector(-0.1, 2),
+                    mass = 5,
+                    J = 1))
+        world.add_interaction(Gravity(node))
+        world.add_interaction(Drag(node))
+        world.add_interaction(Floor(node))
+        #world.add_interaction(RawControl(node))
+        #world.add_interaction(AcroModeControl(node))
+        #world.add_interaction(AcroModeAltitudeControl(node))
+        world.add_interaction(StabilisedControl(node))
+        world.add_interaction(Sprite(node, 'drone.png'))
+drone = Drone()
 
 ## Add a box
 #box_cm = Node(position = Vector(0.2, -0.3), velocity = Vector(0.0, 0.0).scale(0), mass = 10, J = 5000, ω = 1.0)
