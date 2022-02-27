@@ -1,74 +1,16 @@
 import pygame
-from math import sin, pi
 
+from world import *
 from vector import *
 from node import *
 from interaction import *
-from world import *
 from drone import *
-from control_systems import *
 
 world = World()
 
-### Add a pendulum
-#fixed    = world.add_node(FixedNode(position = Vector(0, 2)))
-#pendulum = world.add_node(     Node(position = Vector(1, 2.0), velocity = Vector(0.1, 0), mass = 1, J = 1))
-#world.add_interaction(Gravity(pendulum))
-#world.add_interaction(Drag(pendulum))
-#world.add_interaction(Spring(fixed, pendulum, l0 = 1.0))
+drone = Drone(world, SPEED_MODE)
 
-drone = Drone(world)
-
-## Add a box
-#box_cm = Node(position = Vector(0.2, -0.3), velocity = Vector(0.0, 0.0).scale(0), mass = 10, J = 5000, ω = 1.0)
-#world.add_interaction(
-#        BoundingBox(
-#            world.add_node(box_cm),
-#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.2, +0.6))),
-#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.1, -1.3))),
-#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-1.4, -0.9))),
-#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-0.8, +1.6)))))
-#
-#world.add_interaction(Spring(FixedNode(position = Vector(0.2, -0.3)), box_cm, stiffness_N_per_m= 10000, rotational_damping_Nm_per_rads = 20, damping_Ns_per_m = 60, l0 = 0))
-#world.add_interaction(Gravity(box_cm))
-
-## Another, smaller, box
-#small_cm = Node(position = Vector(-0.2, 2), velocity = Vector(0, -0.8), mass = 15, J = 2, ω=0)
-#world.add_interaction(
-#        BoundingBox(
-#            world.add_node(small_cm),
-#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, +0.2))),
-#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, -0.2))),
-#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, -0.2))),
-#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, +0.2))),
-#            ))
-#
-#world.add_interaction(Gravity(small_cm))
-
-# # Rope
-# rope = RopeBuilder(world, start = Vector(0, 2), stop = Vector(2, 2), N = 15)
-# world.add_interaction(Spring(FixedNode(position = Vector(0, 2)), rope.nodes[0], l0 = 0))
-#
-# stone = world.add_node(Node(position = Vector(2, 2), mass = 5))
-# stone.radius = 15
-# world.add_interaction(Spring(rope.nodes[-1], stone, stiffness_N_per_m = 1e3, l0 = 0))
-# world.add_interaction(Gravity(stone))
-
-running = 1
-
-
-# Warmpup
-for i in range(0,100):
-    (t, dt) = world.tick()
-    for node in world.nodes:
-        node.reset()  # Reset forces
-    for interaction in world.interactions:
-        interaction.apply()  # Compute forces
-    for node in world.nodes:
-        node.simulate(dt,t)  # Step all nodes forward in time
-
-i = 0
-while running:
+while True:
     (t, dt) = world.tick()
 
     # Undraw graphics
@@ -81,20 +23,15 @@ while running:
     for node in world.nodes:
         node.reset()  # Reset forces
 
+    # Handle user inputs and node interactions
     events = pygame.event.get()
     for interaction in world.interactions:
         interaction.handle_event(events)
         interaction.apply()  # Compute forces
 
+    # Compute time step
     for node in world.nodes:
         node.simulate(dt,t)  # Step all nodes forward in time
-
-    if i == world.interleaving:
-        i = 0
-    else:
-        i += 1
-        continue
-
 
     # Draw graphics
     for node in world.nodes:

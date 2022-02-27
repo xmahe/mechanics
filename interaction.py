@@ -113,7 +113,7 @@ class BoundingBox(Interaction):
         self.c = c
         self.d = d
         self.k = stiffness
-        self.υ = 0.3
+        self.υ = 1.2
     def apply(self):
         # Loop through all nodes and see if any node has passed through bounding box
         # Simple neighbourhood check first
