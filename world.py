@@ -7,7 +7,7 @@ class World:
         self.interactions = list()
         self.clock = pygame.time.Clock()
         self.t = 0
-        self.screen_x_px = 600
+        self.screen_x_px = 1200
         self.screen_y_px = 600
         self.screen = pygame.display.set_mode((self.screen_x_px, self.screen_y_px))
         self.origo = (self.screen_x_px/2, self.screen_y_px/2)
