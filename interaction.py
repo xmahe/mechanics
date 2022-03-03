@@ -53,21 +53,35 @@ class SimpleRope(Interaction):
         self.l = 1
         self.max_l = 3
         self.min_l = 0.2
+
     def apply(self):
         l = (self.a.p - self.b.p).length()
+        self.slack = l < self.l
+        k = 100
 
-        if l > self.l:
-            # Apply force
+        if self.slack:
+            pass
+        else: # tight
             Δl = l - self.l
-            k = 100
             hat = (self.b.p-self.a.p).normalise()
             F = k*Δl
             Fa = hat.scale(F)
             Fb = Fa.scale(-1)
             self.a.apply_force(Fa)
             self.b.apply_force(Fb)
-        else:
-            pass # No force
+            # Trick: nudge common speed in the rope direction
+            va_r = hat.scale(self.a.v.dot(hat))
+            vb_r = hat.scale(self.b.v.dot(hat))
+            ma = self.a.mass
+            mb = self.b.mass
+            # ma*va_r + mb*vb_r = ma*v_r + mb*v_r  # change speed but conserve momentum
+            v_r = (va_r.scale(ma) + vb_r.scale(mb)).scale(1/(ma+mb))
+            μ = 0.01
+            self.a.v -= va_r.scale(μ)
+            self.a.v += v_r.scale(μ)
+            self.b.v -= vb_r.scale(μ)
+            self.b.v += v_r.scale(μ)
+
     def draw(self):
         l = (self.a.p - self.b.p).length()
         pygame.draw.lines(self.world.screen, (200,200,200), closed = False,
