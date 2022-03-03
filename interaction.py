@@ -46,6 +46,45 @@ class Spring(Interaction):
                 self.world.world_to_screen_transform(self.b.p),
                 2)
 
+class SimpleRope(Interaction):
+    def __init__(self, node_a, node_b):
+        self.a = node_a
+        self.b = node_b
+        self.l = 1
+        self.max_l = 3
+        self.min_l = 0.2
+    def apply(self):
+        l = (self.a.p - self.b.p).length()
+
+        if l > self.l:
+            # Apply force
+            Δl = l - self.l
+            k = 100
+            hat = (self.b.p-self.a.p).normalise()
+            F = k*Δl
+            Fa = hat.scale(F)
+            Fb = Fa.scale(-1)
+            self.a.apply_force(Fa)
+            self.b.apply_force(Fb)
+        else:
+            pass # No force
+    def draw(self):
+        l = (self.a.p - self.b.p).length()
+        pygame.draw.lines(self.world.screen, (200,200,200), closed = False,
+            points = [self.world.world_to_screen_transform(node.p) for node in [self.a, self.b]],
+            width = 2)
+    def undraw(self):
+        l = (self.a.p - self.b.p).length()
+        pygame.draw.lines(self.world.screen, (255,255,255), closed = False,
+            points = [self.world.world_to_screen_transform(node.p) for node in [self.a, self.b]],
+            width = 2)
+    def change_length(self, diff):
+        l = self.l
+        l += diff
+        if l > self.max_l: l = self.max_l
+        if l < self.min_l: l = self.min_l
+        self.l = l
+
 class Gravity(Interaction):
     def __init__(self, node):
         self.node = node

@@ -13,6 +13,7 @@ world = World()
 #drone = Drone(world, ACRO_ALTITUDE_MODE)
 #drone = Drone(world, STABILISED_MODE)
 drone = Drone(world, SPEED_MODE)
+tool = Tool(world, drone)
 
 while True:
     (t, dt) = world.tick()

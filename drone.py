@@ -12,6 +12,59 @@ ACRO_ALTITUDE_MODE = 2
 STABILISED_MODE = 3
 SPEED_MODE = 4
 
+
+class Tool:
+    def __init__(self, world, drone):
+        cm = world.add_node(
+                Node(
+                    position = Vector(0.5,0),
+                    velocity = Vector(0,0),
+                    mass = 2,
+                    J = 1
+                    )
+                )
+        self.cm = cm
+        world.add_interaction(Gravity(cm))
+        world.add_interaction(Drag(cm))
+        world.add_interaction(Floor(cm))
+        world.add_interaction(Sprite(cm, 'tool.png'))
+        self.rope = SimpleRope(drone.cm, self.cm)
+        world.add_interaction(self.rope)
+        world.add_interaction(ToolControl(self.rope))
+
+
+class ToolControl(Interaction):
+    def __init__(self, rope):
+        self.rope = rope
+        self.moving_up = False
+        self.moving_down = False
+        self.dropping = False
+
+    def apply(self):
+        if self.moving_up:
+            self.rope.change_length(-0.001)
+        if self.moving_down:
+            self.rope.change_length(+0.001)
+        if self.dropping:
+            self.rope.change_length(+1.0)
+
+    def handle_event(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.moving_up = True
+                if event.key == pygame.K_s:
+                    self.moving_down = True
+                if event.key == pygame.K_d:
+                    self.dropping = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    self.moving_up = False
+                if event.key == pygame.K_s:
+                    self.moving_down = False
+                if event.key == pygame.K_d:
+                    self.dropping = False
+
 class Drone:
     def __init__(self, world, mode = None):
         cm = world.add_node(
@@ -20,6 +73,7 @@ class Drone:
                     velocity = Vector(-0.0, 0),
                     mass = 5,
                     J = 1))
+        self.cm = cm
         world.add_interaction(Gravity(cm))
         world.add_interaction(Drag(cm))
         world.add_interaction(Floor(cm))

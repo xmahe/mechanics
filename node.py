@@ -17,7 +17,7 @@ class Node:
     def reset(self):
         self.f = Vector(0, 0)
         self.τ = 0
-    def apply_force(self, f):
+    def apply_force(self, f:Vector):
         self.f += f
     def apply_torque(self, τ):
         self.τ += τ
