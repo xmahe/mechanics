@@ -1,0 +1,175 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/git/mechanics/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210905.0/
+# Rope	snippets.md	/^# # Rope$/;"	c
+))	snippets.md	/^#            ))$/;"	c
+ACRO_ALTITUDE_MODE	drone.py	/^ACRO_ALTITUDE_MODE = 2$/;"	v
+ACRO_MODE	drone.py	/^ACRO_MODE = 1$/;"	v
+AcroModeAltitudeControl	drone.py	/^class AcroModeAltitudeControl(Interaction):$/;"	c
+AcroModeControl	drone.py	/^class AcroModeControl(Interaction):$/;"	c
+Add a box	snippets.md	/^## Add a box$/;"	s
+Add a pendulum	snippets.md	/^### Add a pendulum$/;"	S
+Another, smaller, box	snippets.md	/^## Another, smaller, box$/;"	s	chapter:world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-0.8, +1.6)))))
+BoundingBox	interaction.py	/^class BoundingBox(Interaction):$/;"	c
+BoundingBox(	snippets.md	/^#        BoundingBox($/;"	c
+Drag	interaction.py	/^class Drag(Interaction):$/;"	c
+Drone	drone.py	/^class Drone:$/;"	c
+FixedDistance	interaction.py	/^class FixedDistance(Interaction):$/;"	c
+FixedNode	node.py	/^class FixedNode(Node):$/;"	c
+Floor	interaction.py	/^class Floor(Interaction):$/;"	c
+Gravity	interaction.py	/^class Gravity(Interaction):$/;"	c
+Interaction	interaction.py	/^class Interaction():$/;"	c
+Node	node.py	/^class Node:$/;"	c
+RAW_MODE	drone.py	/^RAW_MODE = 0$/;"	v
+RawControl	drone.py	/^class RawControl(Interaction):$/;"	c
+Rope	interaction.py	/^class Rope(Interaction):$/;"	c
+RopeBuilder	interaction.py	/^def RopeBuilder(world, start, stop, N = 6):$/;"	f
+SPEED_MODE	drone.py	/^SPEED_MODE = 4$/;"	v
+STABILISED_MODE	drone.py	/^STABILISED_MODE = 3$/;"	v
+SimpleRope	interaction.py	/^class SimpleRope(Interaction):$/;"	c
+SpeedControl	drone.py	/^class SpeedControl(Interaction):$/;"	c
+Spring	interaction.py	/^class Spring(Interaction):$/;"	c
+Sprite	interaction.py	/^class Sprite(Interaction):$/;"	c
+StabilisedControl	drone.py	/^class StabilisedControl(Interaction):$/;"	c
+TooShort	vector.py	/^    class TooShort(Exception):$/;"	c	class:Vector
+Tool	drone.py	/^class Tool:$/;"	c
+ToolControl	drone.py	/^class ToolControl(Interaction):$/;"	c
+Vector	vector.py	/^class Vector:$/;"	c
+VirtualNode	node.py	/^class VirtualNode(Node):$/;"	c
+World	world.py	/^class World:$/;"	c
+__add__	vector.py	/^    def __add__(self, other):$/;"	m	class:Vector
+__init	interaction.py	/^    def __init(self):$/;"	m	class:Interaction	file:
+__init	interaction.py	/^    def __init(self, a :Node, b :Node):$/;"	m	class:FixedDistance	file:
+__init__	drone.py	/^    def __init__(self, node):$/;"	m	class:AcroModeAltitudeControl
+__init__	drone.py	/^    def __init__(self, node):$/;"	m	class:AcroModeControl
+__init__	drone.py	/^    def __init__(self, node):$/;"	m	class:RawControl
+__init__	drone.py	/^    def __init__(self, node):$/;"	m	class:SpeedControl
+__init__	drone.py	/^    def __init__(self, node):$/;"	m	class:StabilisedControl
+__init__	drone.py	/^    def __init__(self, rope):$/;"	m	class:ToolControl
+__init__	drone.py	/^    def __init__(self, world, drone):$/;"	m	class:Tool
+__init__	drone.py	/^    def __init__(self, world, mode = None):$/;"	m	class:Drone
+__init__	interaction.py	/^    def __init__(self, cm, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, o/;"	m	class:BoundingBox
+__init__	interaction.py	/^    def __init__(self, node):$/;"	m	class:Floor
+__init__	interaction.py	/^    def __init__(self, node):$/;"	m	class:Gravity
+__init__	interaction.py	/^    def __init__(self, node, drag_coefficient = 0.1):$/;"	m	class:Drag
+__init__	interaction.py	/^    def __init__(self, node, filename):$/;"	m	class:Sprite
+__init__	interaction.py	/^    def __init__(self, node_a, node_b):$/;"	m	class:SimpleRope
+__init__	interaction.py	/^    def __init__(self, node_a, node_b, stiffness_N_per_m = 1000, damping_Ns_per_m = 30, l0 = 1, /;"	m	class:Spring
+__init__	interaction.py	/^    def __init__(self, nodes):$/;"	m	class:Rope
+__init__	node.py	/^    def __init__(self, cm, position_relative_to_cm):$/;"	m	class:VirtualNode
+__init__	node.py	/^    def __init__(self, position):$/;"	m	class:FixedNode
+__init__	node.py	/^    def __init__(self, position, velocity = Vector(0, 0), mass = 1, J = 1, ω = 0):$/;"	m	class:Node
+__init__	vector.py	/^    def __init__(self, x, y):$/;"	m	class:Vector
+__init__	world.py	/^    def __init__(self):$/;"	m	class:World
+__str__	vector.py	/^    def __str__(self):$/;"	m	class:Vector
+__sub__	vector.py	/^    def __sub__(self, other):$/;"	m	class:Vector
+_altitude_rate_feedback	drone.py	/^    def _altitude_rate_feedback(self):$/;"	m	class:AcroModeControl
+_altitude_rate_feedback	drone.py	/^    def _altitude_rate_feedback(self, vy_ref):$/;"	m	class:AcroModeAltitudeControl
+_altitude_rate_feedback	drone.py	/^    def _altitude_rate_feedback(self, vy_ref):$/;"	m	class:SpeedControl
+_altitude_rate_feedback	drone.py	/^    def _altitude_rate_feedback(self, vy_ref):$/;"	m	class:StabilisedControl
+_angular_rate_feedback	drone.py	/^    def _angular_rate_feedback(self, ω_ref):$/;"	m	class:AcroModeAltitudeControl
+_angular_rate_feedback	drone.py	/^    def _angular_rate_feedback(self, ω_ref):$/;"	m	class:AcroModeControl
+_angular_rate_feedback	drone.py	/^    def _angular_rate_feedback(self, ω_ref):$/;"	m	class:SpeedControl
+_angular_rate_feedback	drone.py	/^    def _angular_rate_feedback(self, ω_ref):$/;"	m	class:StabilisedControl
+_speed_feedback	drone.py	/^    def _speed_feedback(self, vx_ref):$/;"	m	class:SpeedControl
+_stabilisation_feedback	drone.py	/^    def _stabilisation_feedback(self, θ_ref):$/;"	m	class:SpeedControl
+_stabilisation_feedback	drone.py	/^    def _stabilisation_feedback(self, θ_ref):$/;"	m	class:StabilisedControl
+add_interaction	world.py	/^    def add_interaction(self, interaction):$/;"	m	class:World
+add_node	world.py	/^    def add_node(self, node):$/;"	m	class:World
+apply	drone.py	/^    def apply(self):$/;"	m	class:AcroModeAltitudeControl
+apply	drone.py	/^    def apply(self):$/;"	m	class:AcroModeControl
+apply	drone.py	/^    def apply(self):$/;"	m	class:RawControl
+apply	drone.py	/^    def apply(self):$/;"	m	class:SpeedControl
+apply	drone.py	/^    def apply(self):$/;"	m	class:StabilisedControl
+apply	drone.py	/^    def apply(self):$/;"	m	class:ToolControl
+apply	interaction.py	/^    def apply(self):$/;"	m	class:BoundingBox
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Drag
+apply	interaction.py	/^    def apply(self):$/;"	m	class:FixedDistance
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Floor
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Gravity
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Interaction
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Rope
+apply	interaction.py	/^    def apply(self):$/;"	m	class:SimpleRope
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Spring
+apply	interaction.py	/^    def apply(self):$/;"	m	class:Sprite
+apply_force	node.py	/^    def apply_force(self, f):$/;"	m	class:FixedNode
+apply_force	node.py	/^    def apply_force(self, f):$/;"	m	class:VirtualNode
+apply_force	node.py	/^    def apply_force(self, f:Vector):$/;"	m	class:Node
+apply_force_at	node.py	/^    def apply_force_at(self, f, r_world):$/;"	m	class:Node
+apply_torque	node.py	/^    def apply_torque(self, f):$/;"	m	class:VirtualNode
+apply_torque	node.py	/^    def apply_torque(self, τ):$/;"	m	class:FixedNode
+apply_torque	node.py	/^    def apply_torque(self, τ):$/;"	m	class:Node
+as_tuple	vector.py	/^    def as_tuple(self):$/;"	m	class:Vector
+change_length	interaction.py	/^    def change_length(self, diff):$/;"	m	class:SimpleRope
+cross	vector.py	/^    def cross(self, other):$/;"	m	class:Vector
+dot	vector.py	/^    def dot(self, other):$/;"	m	class:Vector
+draw	interaction.py	/^    def draw(self):$/;"	m	class:BoundingBox
+draw	interaction.py	/^    def draw(self):$/;"	m	class:FixedDistance
+draw	interaction.py	/^    def draw(self):$/;"	m	class:Interaction
+draw	interaction.py	/^    def draw(self):$/;"	m	class:Rope
+draw	interaction.py	/^    def draw(self):$/;"	m	class:SimpleRope
+draw	interaction.py	/^    def draw(self):$/;"	m	class:Spring
+draw	interaction.py	/^    def draw(self):$/;"	m	class:Sprite
+draw	node.py	/^    def draw(self):$/;"	m	class:Node
+drone	game.py	/^drone = Drone(world, SPEED_MODE)$/;"	v
+events	game.py	/^    events = pygame.event.get()$/;"	v
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:AcroModeAltitudeControl
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:AcroModeControl
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:RawControl
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:SpeedControl
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:StabilisedControl
+handle_event	drone.py	/^    def handle_event(self, events):$/;"	m	class:ToolControl
+handle_event	interaction.py	/^    def handle_event(self, events):$/;"	m	class:Interaction
+handle_event	interaction.py	/^    def handle_event(self, events):$/;"	m	class:Sprite
+implicit_Euler_constant_f	node.py	/^        def implicit_Euler_constant_f(dt, f, x0):$/;"	f	member:Node.simulate	file:
+is_inside	interaction.py	/^            def is_inside(p):$/;"	f	member:BoundingBox.apply	file:
+length	vector.py	/^    def length(self):$/;"	m	class:Vector
+nodea	game.py	/^nodea = world.add_node(Node(position = Vector(2.5,0), velocity = Vector(0,0), mass = 2, J = 1))$/;"	v
+nodeb	game.py	/^nodeb = world.add_node(Node(position = Vector(2.6,1), velocity = Vector(0,0), mass = 2, J = 1))$/;"	v
+normalise	vector.py	/^    def normalise(self):$/;"	m	class:Vector
+reset	node.py	/^    def reset(self):$/;"	m	class:FixedNode
+reset	node.py	/^    def reset(self):$/;"	m	class:Node
+reset	node.py	/^    def reset(self):$/;"	m	class:VirtualNode
+rope = RopeBuilder(world, start = Vector(0, 2), stop = Vector(2, 2), N = 15)	snippets.md	/^# rope = RopeBuilder(world, start = Vector(0, 2), stop = Vector(2, 2), N = 15)$/;"	c
+rotate	vector.py	/^    def rotate(self, Θ):$/;"	m	class:Vector
+rotate90CCW	vector.py	/^    def rotate90CCW(self):$/;"	m	class:Vector
+rotate90CW	vector.py	/^    def rotate90CW(self):$/;"	m	class:Vector
+scale	vector.py	/^    def scale(self, factor):$/;"	m	class:Vector
+screen_to_world_transform	world.py	/^    def screen_to_world_transform(self, position_px):$/;"	m	class:World
+simulate	node.py	/^    def simulate(self, dt, t):$/;"	m	class:FixedNode
+simulate	node.py	/^    def simulate(self, dt, t):$/;"	m	class:Node
+simulate	node.py	/^    def simulate(self, dt, t):$/;"	m	class:VirtualNode
+stone = world.add_node(Node(position = Vector(2, 2), mass = 5))	snippets.md	/^# stone = world.add_node(Node(position = Vector(2, 2), mass = 5))$/;"	c
+stone.radius = 15	snippets.md	/^# stone.radius = 15$/;"	c
+tick	world.py	/^    def tick(self):$/;"	m	class:World
+tool	game.py	/^tool = Tool(world, drone)$/;"	v
+undraw	interaction.py	/^    def undraw(self):$/;"	m	class:FixedDistance
+undraw	interaction.py	/^    def undraw(self):$/;"	m	class:Interaction
+undraw	interaction.py	/^    def undraw(self):$/;"	m	class:SimpleRope
+undraw	interaction.py	/^    def undraw(self):$/;"	m	class:Sprite
+undraw	node.py	/^    def undraw(self):$/;"	m	class:Node
+world	game.py	/^world = World()$/;"	v
+world.add_interaction(Gravity(stone))	snippets.md	/^# world.add_interaction(Gravity(stone))$/;"	c
+world.add_interaction(Spring(FixedNode(position = Vector(0, 2)), rope.nodes[0], l0 = 0))	snippets.md	/^# world.add_interaction(Spring(FixedNode(position = Vector(0, 2)), rope.nodes[0], l0 = 0))$/;"	c
+world.add_interaction(Spring(rope.nodes[-1], stone, stiffness_N_per_m = 1e3, l0 = 0))	snippets.md	/^# world.add_interaction(Spring(rope.nodes[-1], stone, stiffness_N_per_m = 1e3, l0 = 0))$/;"	c
+world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.1, -1.3))),	snippets.md	/^#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.1, -1.3))),$/;"	c
+world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.2, +0.6))),	snippets.md	/^#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(+1.2, +0.6))),$/;"	c
+world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-0.8, +1.6)))))	snippets.md	/^#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-0.8, +1.6)))))$/;"	c
+world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-1.4, -0.9))),	snippets.md	/^#            world.add_node(VirtualNode(box_cm, position_relative_to_cm = Vector(-1.4, -0.9))),$/;"	c
+world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, +0.2))),	snippets.md	/^#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, +0.2)))/;"	c
+world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, -0.2))),	snippets.md	/^#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(+0.2, -0.2)))/;"	c
+world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, +0.2))),	snippets.md	/^#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, +0.2)))/;"	c
+world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, -0.2))),	snippets.md	/^#            world.add_node(VirtualNode(small_cm, position_relative_to_cm = Vector(-0.2, -0.2)))/;"	c
+world.add_node(box_cm),	snippets.md	/^#            world.add_node(box_cm),$/;"	c
+world.add_node(small_cm),	snippets.md	/^#            world.add_node(small_cm),$/;"	c
+world_to_screen_transform	world.py	/^    def world_to_screen_transform(self, position_m):$/;"	m	class:World
+π	drone.py	/^from math import pi as π$/;"	x	nameref:unknown:pi
+π	interaction.py	/^from math import pi as π$/;"	x	nameref:unknown:pi

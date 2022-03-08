@@ -15,6 +15,21 @@ world = World()
 drone = Drone(world, SPEED_MODE)
 tool = Tool(world, drone)
 
+nodea = world.add_node(Node(position = Vector(2.5,3), velocity = Vector(0,0), mass = 2, J = 1))
+nodeb = world.add_node(Node(position = Vector(2.6,2), velocity = Vector(0,0), mass = 2, J = 1))
+nodec = world.add_node(Node(position = Vector(3.6,2), velocity = Vector(0,0), mass = 2, J = 1))
+world.add_interaction(Floor(nodea))
+world.add_interaction(Floor(nodeb))
+world.add_interaction(Floor(nodec))
+world.add_interaction(Gravity(nodea))
+world.add_interaction(Gravity(nodeb))
+world.add_interaction(Gravity(nodec))
+world.add_interaction(FixedDistance(nodea,nodeb))
+world.add_interaction(FixedDistance(nodeb,nodec))
+nodeafixer = world.add_node(FixedNode(position = nodea.p))
+world.add_interaction(RotarySpring(nodeafixer, nodea))
+world.add_interaction(FixedDistance(nodea, nodeafixer))
+
 while True:
     (t, dt) = world.tick()
 

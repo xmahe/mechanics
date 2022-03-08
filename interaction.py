@@ -3,6 +3,7 @@ from vector import *
 from node import *
 from math import pi as π
 
+
 class Interaction():
     # Any physical interaction between two objects
     def __init(self):
@@ -42,6 +43,65 @@ class Spring(Interaction):
         self.b.apply_force(n_hat.scale(+force) + j_hat.scale(+rotational_damping))
     def draw(self):
         pygame.draw.line(self.world.screen, (100,100,100),
+                self.world.world_to_screen_transform(self.a.p),
+                self.world.world_to_screen_transform(self.b.p),
+                2)
+
+class RotarySpring(Interaction):
+    def __init__(self, a: Node, b :Node):
+        self.a = a
+        self.b = b
+        self.k = 1
+    def apply(self):
+        Δθ = self.a.θ - self.b.θ
+        self.a.apply_torque(+Δθ*self.k)
+        self.b.apply_torque(-Δθ*self.k)
+
+class FixedDistance(Interaction):
+    def __init__(self, a :Node, b :Node):
+        self.a = a
+        self.b = b
+        self.l = (a.p-b.p).length();
+    def apply(self):
+        k = 10000
+        l = (self.a.p-self.b.p).length()
+        if l < 0.000001:
+            # Nodes on top of each other - treat this special case differently!
+            v = (self.a.v + self.b.v).scale(0.5).scale(0.5)
+            self.a.v = v
+            self.b.v = v
+            p = (self.a.p + self.b.p).scale(0.5)
+            self.a.p = p
+            self.b.p = p
+            return
+        Δl = l - self.l
+
+        hat = (self.b.p-self.a.p).normalise()
+        F = k*Δl
+        Fa = hat.scale(F)
+        Fb = Fa.scale(-1)
+        self.a.apply_force(Fa)
+        self.b.apply_force(Fb)
+        # Trick: nudge common speed in hat direction
+        va_r = hat.scale(self.a.v.dot(hat))
+        vb_r = hat.scale(self.b.v.dot(hat))
+        ma = self.a.mass
+        mb = self.b.mass
+        # ma*va_r + mb*vb_r = ma*v_r + mb*v_r  # change speed but conserve momentum
+        v_r = (va_r.scale(ma) + vb_r.scale(mb)).scale(1/(ma+mb))
+        μ = 0.10
+        self.a.v -= va_r.scale(μ)
+        self.a.v += v_r.scale(μ)
+        self.b.v -= vb_r.scale(μ)
+        self.b.v += v_r.scale(μ)
+
+    def draw(self):
+        pygame.draw.line(self.world.screen, (100,200,100),
+                self.world.world_to_screen_transform(self.a.p),
+                self.world.world_to_screen_transform(self.b.p),
+                2)
+    def undraw(self):
+        pygame.draw.line(self.world.screen, (255,255,255),
                 self.world.world_to_screen_transform(self.a.p),
                 self.world.world_to_screen_transform(self.b.p),
                 2)

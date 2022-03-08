@@ -85,15 +85,26 @@ class Node:
 
 class FixedNode(Node):
     def __init__(self, position):
+        self.fixedposition = position
         super().__init__(position, Vector(0, 0), 1, 1)
     def reset(self):
-        pass
+        self.v = Vector(0,0)
+        self.p = self.fixedposition
+        self.θ = 0
+        self.ω = 0
+        self.f = 0
+        self.τ = 0
     def apply_force(self, f):
         pass
     def apply_torque(self, τ):
         pass
     def simulate(self, dt, t):
-        pass
+        self.v = Vector(0,0)
+        self.p = self.fixedposition
+        self.θ = 0
+        self.ω = 0
+        self.f = 0
+        self.τ = 0
 
 class VirtualNode(Node):
     # Used for nodes belonging to bounded boxes, with no own mass
