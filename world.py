@@ -61,3 +61,42 @@ class World:
             print(f"warning fps actual low ({1/dt/self.interleaving})")
         self.t += dt
         return (self.t, dt)
+
+    def run(self):
+        running = 1
+
+        # Warmpup
+        for i in range(0,100):
+            (t, dt) = self.tick()
+            for node in self.nodes:
+                node.reset()  # Reset forces
+            for interaction in self.interactions:
+                interaction.apply()  # Compute forces
+            for node in self.nodes:
+                node.simulate(dt,t)  # Step all nodes forward in time
+
+        i = 0
+        while running:
+            (t, dt) = self.tick()
+
+            # Physics computations
+            for node in self.nodes:
+                node.reset()  # Reset forces
+            for interaction in self.interactions:
+                interaction.apply()  # Compute forces
+            for node in self.nodes:
+                node.simulate(dt,t)  # Step all nodes forward in time
+
+            if i == self.interleaving:
+                i = 0
+            else:
+                i += 1
+                continue
+
+            # Draw graphics
+            self.screen.fill((255,255,255))
+            for node in self.nodes:
+                node.draw()
+            for interaction in self.interactions:
+                interaction.draw()
+            pygame.display.flip()

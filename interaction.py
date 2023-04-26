@@ -40,6 +40,10 @@ class Spring(Interaction):
                 self.world.world_to_screen_transform(self.a.p),
                 self.world.world_to_screen_transform(self.b.p),
                 2)
+    def increase_length(self, Δx):
+        self.l0 += Δx
+    def set_length(self, l0):
+        self.l0 = l0
 
 class Gravity(Interaction):
     def __init__(self, node):
@@ -77,115 +81,3 @@ class Drag(Interaction):
             v_hat = self.node.v.normalise()
             drag = -self.drag_coefficient*v**2
             self.node.apply_force(v_hat.scale(drag))
-
-class BoundingBox(Interaction):
-    def __init__(self, cm, a, b, c, d, stiffness = 5000): # a,b,c,d must be given in CW order, or normal computations will be wrong
-        self.cm = cm
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
-        self.k = stiffness
-        self.υ = 0.3
-    def apply(self):
-        # Loop through all nodes and see if any node has passed through bounding box
-        # Simple neighbourhood check first
-        x_min = min([self.a.p.x, self.b.p.x, self.c.p.x, self.d.p.x])
-        y_min = min([self.a.p.y, self.b.p.y, self.c.p.y, self.d.p.y])
-        x_max = max([self.a.p.x, self.b.p.x, self.c.p.x, self.d.p.x])
-        y_max = max([self.a.p.y, self.b.p.y, self.c.p.y, self.d.p.y])
-        close_nodes = [node for node in self.world.nodes if node.p.x < x_max and node.p.x > x_min and node.p.y < y_max and node.p.y > y_min]
-        close_nodes = [node for node in close_nodes if not id(node) == id(self.cm)]
-        #import pdb; pdb.set_trace()
-        for node in close_nodes:
-            def is_inside(p):
-                at = (self.b.p - self.a.p).cross(p - self.a.p) > 0
-                bt = (self.c.p - self.b.p).cross(p - self.b.p) > 0
-                ct = (self.d.p - self.c.p).cross(p - self.c.p) > 0
-                dt = (self.a.p - self.d.p).cross(p - self.d.p) > 0
-                return at == bt and at == ct and at == dt
-            if not is_inside(node.p):
-                continue
-            # At this point, we know we have a node which have entered a bounding box!
-            # There should be force in the normal direction of the box.
-            # 1. Compute normal of every line
-            normals = [
-                    (self.b.p - self.a.p).rotate90CCW().normalise(),
-                    (self.c.p - self.b.p).rotate90CCW().normalise(),
-                    (self.d.p - self.c.p).rotate90CCW().normalise(),
-                    (self.a.p - self.d.p).rotate90CCW().normalise()]
-            # 2. Compute middle point of every line
-            midpoints = [
-                    (self.a.p+self.b.p).scale(0.5),
-                    (self.b.p+self.c.p).scale(0.5),
-                    (self.c.p+self.d.p).scale(0.5),
-                    (self.d.p+self.a.p).scale(0.5)]
-            # 3. Compute normal dot (p - middle point of line) for every line
-            distances = [normals[i].dot(midpoints[i] - node.p) for i in range(4)]
-            # 4. The lowest value from step 3 is the line with the closest distance
-            index = distances.index(min(distances))  # Search for minimum value item and return index O(n)
-            distance = distances[index]
-            midpoint = midpoints[index]
-            n_hat    = normals[index]
-            # Two options - if collision is high relative velocity, use momentum theory, otherwise, use normal forces
-            spring_model = True
-            if spring_model:
-                abs_spring_force = self.k*distance
-                spring_force = n_hat.scale(abs_spring_force)  # TODO add damping
-                friction_force = n_hat.rotate90CCW().scale(self.υ*abs_spring_force)
-                self.cm.apply_force_at(spring_force.scale(-1) - friction_force, node.p)
-                node.apply_force(friction_force + spring_force.scale(1))
-                continue
-            else:
-                continue
-
-            # TODO check speed and implement both methods, compare with virtual nodes in corners
-            # 5. Mirror the particle position and velocity around the closest line, if the n_hat*velocity is negative
-            normal_velocity = normals[index].dot(node.v)
-            if normal_velocity > 0:
-                # don't do anything
-                return
-            damping = 0.30 # 0.10 equals 90% energy lost when bumping
-            node.p = node.p + normals[index].scale(2*(midpoints[index] - node.p).dot(normals[index]))
-            node.v = node.v - normals[index].scale(normal_velocity*(1+damping))
-            # 6. Apply force to all nodes in bounding box? the center of mass of the box is used to also compute torque which are converted to forces as well
-            self.cm
-            #import pdb;pdb.set_trace()
-
-
-        # TODO check if a line passes through a bounding box, or a bounding box with a bounding box
-
-    def draw(self):
-        pygame.draw.lines(self.world.screen, (100,100,100), closed = True,
-            points = [self.world.world_to_screen_transform(self.a.p),
-                      self.world.world_to_screen_transform(self.b.p),
-                      self.world.world_to_screen_transform(self.c.p),
-                      self.world.world_to_screen_transform(self.d.p)],
-            width = 2)
-
-
-def RopeBuilder(world, start, stop, N = 6):
-    from numpy import linspace
-    X = linspace(start.x, stop.x, N)
-    Y = linspace(start.y, stop.y, N)
-    L = (start-stop).length()
-    dL = L / (N - 1)
-    nodes = [Node(position = Vector(X[i], Y[i]), mass = 0.1, J = 0.1) for i in range(N)]
-    world.add_node(nodes)
-    rope = Rope(nodes)
-    world.add_interaction(rope)
-    for node in rope.nodes:
-        world.add_interaction(Gravity(node))
-    for i in range(N-1):
-        world.add_interaction(Spring(nodes[i], nodes[i+1], l0 = dL, stiffness_N_per_m = (N-1)*1e3, damping_Ns_per_m = 0, rotational_damping_Nm_per_rads= 0))
-    return rope
-
-class Rope(Interaction):
-    def __init__(self, nodes):
-        self.nodes = nodes
-    def apply(self):
-        pass
-    def draw(self):
-        pygame.draw.lines(self.world.screen, (200,200,200), closed = False,
-            points = [self.world.world_to_screen_transform(node.p) for node in self.nodes],
-            width = 2)
