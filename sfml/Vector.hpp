@@ -81,6 +81,12 @@ struct Vector {
     friend Vector operator*(double factor, const Vector& vec) {
         return Vector(vec.x * factor, vec.y * factor);
     }
+    
+    Vector& operator*=(double factor) {
+        x *= factor;
+        y *= factor;
+        return *this;
+    }
 
     Vector operator/(double factor) const {
         return Vector(x / factor, y / factor);

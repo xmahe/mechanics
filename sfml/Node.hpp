@@ -5,7 +5,7 @@
 
 class Node : public sf::Drawable {
  public:
-    double m= 1;
+    double m = 1;
     Vector p = {0, 0};
     Vector v = {0, 0};
     Vector f = {0, 0};
@@ -14,9 +14,11 @@ class Node : public sf::Drawable {
     double ω = 0;
     double τ = 0;
 
-    static constexpr double r = 5;
+    static constexpr double r = 0.01;
 
-    explicit Node() {
+    Node() : Node(Vector(0, 0)) { }
+    
+    Node(Vector p_) : p(p_) {
         _shape.setRadius(r);
         _shape.setFillColor(sf::Color::Red);
         _shape.setOrigin(r, r);
@@ -75,15 +77,7 @@ class Node : public sf::Drawable {
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         _shape.setPosition(p.x, p.y);
-        // states.transform *= getTransform();
         target.draw(_shape, states);
-        
-        // Draw a line indicating the force
-        sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(p.x, p.y)),
-            sf::Vertex(sf::Vector2f(p.x + f.x, p.y + f.y), sf::Color::Red)
-        };
-        target.draw(line, 2, sf::Lines);
     }
  
     
@@ -108,26 +102,77 @@ class LineConstrainedNode : public Node {
         b2.y = b2_.y;
         direction = b1-b2;
         direction = direction / direction.length();
+
+        p.x = (b1.x + b2.x) / 2;
+        p.y = (b1.y + b2.y) / 2;
     }
     
     virtual void Simulate(double dt, double t) override {
+        // Limit forces to line direction
         f = f.dot(direction) * direction;
+
         if (b1.x > b2.x) {
-            if (p.x > b1.x and f.x > 0) { f.x = 0; v.x = 0; p.x = b1.x; }
-            if (p.x < b2.x and f.x < 0) { f.x = 0; v.x = 0; p.x = b2.x; }
+            if (p.x > b1.x) {
+                p.x = b1.x;
+                if (f.x > 0) {
+                    f.x = 0;
+                    v.x = 0;
+                }
+            }
+            if (p.x < b2.x) {
+                p.x = b2.x;
+                if (f.x < 0) {
+                    f.x = 0;
+                    v.x = 0;
+                }
+            }
         } else {
-            if (p.x < b1.x and f.x < 0) { f.x = 0; v.x = 0; p.x = b1.x; }
-            if (p.x > b2.x and f.x > 0) { f.x = 0; v.x = 0; p.x = b2.x; }
+            if (p.x < b1.x) {
+                p.x = b1.x;
+                if (f.x < 0) { 
+                    f.x = 0;
+                    v.x = 0;
+                }
+            }
+            if (p.x > b2.x) {
+                p.x = b2.x;
+                if (f.x > 0) {
+                    f.x = 0;
+                    v.x = 0;
+                }
+            }
         }
         if (b1.y > b2.y) {
-            if (p.y > b1.y and f.y > 0) { f.y = 0; v.y = 0; p.y = b1.y; }
-            if (p.y < b2.y and f.y < 0) { f.y = 0; v.y = 0; p.y = b2.y; }
+            if (p.y > b1.y) {
+                p.y = b1.y;
+                if (f.y > 0) {
+                    f.y = 0;
+                    v.y = 0;
+                }
+            }
+            if (p.y < b2.y) {
+                p.y = b2.y;
+                if (f.y < 0) {
+                    f.y = 0;
+                    v.y = 0;
+                }
+            }
         } else {
-            if (p.y < b1.y and f.y < 0) { f.y = 0; v.y = 0; p.y = b1.y; }
-            if (p.y > b2.y and f.y > 0) { f.y = 0; v.y = 0; p.y = b2.y; }
+            if (p.y < b1.y) {
+                p.y = b1.y;
+                if (f.y < 0) {
+                    f.y = 0;
+                    v.y = 0;
+                }
+            }
+            if (p.y > b2.y) {
+                p.y = b2.y;
+                if (f.y > 0) {
+                    f.y = 0;
+                    v.y = 0;
+                }
+            }
         }
-
-        std::cout << "p.x = " << p.x << std::endl;
 
         Node::Simulate(dt, t);
     }
@@ -148,3 +193,13 @@ class LineConstrainedNode : public Node {
     Vector b2;
     Vector direction;
 };
+
+void DrawForce(sf::RenderTarget& target, Node node, Vector f) {
+    double k = 0.2;
+    sf::Vertex line[] = {
+        sf::Vertex(sf::Vector2f(node.p.x, node.p.y)),
+        sf::Vertex(sf::Vector2f(node.p.x + k*f.x, node.p.y + k*f.y), sf::Color::Red)
+    };
+    target.draw(line, 2, sf::Lines);
+}
+

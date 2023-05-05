@@ -2,6 +2,7 @@
 #include "Node.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <math.h>
 #pragma once
 
 class Constraint : public sf::Drawable {
@@ -11,12 +12,15 @@ class Constraint : public sf::Drawable {
 
 class Spring : public Constraint {
  public:
-    explicit Spring(Node* a_, Node* b_) : a(a_), b(b_) { }
-    double k = 1000;  // [N/m]  stiffness
-    double ζ = 30;    // [Ns/m] damping
-    double l0 = 1;    // [m]    nominal length
+    explicit Spring(Node* a_, Node* b_) : a(a_), b(b_) { 
+        l0 = (a->p - b->p).length();
+    }
 
-    virtual void Apply() {
+    double k = 500;  // [N/m]  stiffness
+    double ζ = 10;    // [Ns/m] damping
+    double l0;        // [m]    nominal length
+
+    virtual void Apply() override {
         Vector n_hat = (a->p - b->p).normalise();  //       spring normal
         double l = (a->p - b->p).length();         // [m]   spring length
         double v = (a->v - b->v).dot(n_hat);       // [m/s] spring expansion speed
@@ -26,7 +30,12 @@ class Spring : public Constraint {
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        // Intentional no-op
+        // Draw a line indicating the constraint
+        sf::Vertex line[] = {
+            sf::Vertex(sf::Vector2f(a->p.x, a->p.y), {0, 200, 0}),
+            sf::Vertex(sf::Vector2f(b->p.x, b->p.y), {0, 200, 0})
+        };
+        target.draw(line, 2, sf::Lines);
     }
 
  private:
@@ -38,7 +47,7 @@ class Gravity : public Constraint {
  public:
     Gravity(Node* node_) : node(node_) { }
 
-    virtual void Apply() {
+    virtual void Apply() override {
         static constexpr double g = 9.82;
         node->ApplyForce(Vector(0, node->m*g));
     }
@@ -53,17 +62,19 @@ class Gravity : public Constraint {
 
 class Drag : public Constraint {
  public:
-    double k = 0.1;  // [Ns²/m²]  resulting drag coefficient, f = k∙v²
+    double k = 10;  // [Ns²/m²]  resulting drag coefficient, f = k∙v²
 
-    Drag(Node* node_) : node(node_) { }
+    explicit Drag(Node* node_, double Δt_) : node(node_), Δt(Δt_) { }
     
-    virtual void Apply() {
+    virtual void Apply() override {
         double v2 = node->v.dot(node->v);
-        if (v2 < 0.1)
-            return;
-        Vector v_hat = node->v.normalise();
-        Vector f = -k*v2*v_hat;
-        node->ApplyForce(f);
+        if (abs(v2) > 0.1) {
+            Vector v_hat = node->v.normalise();
+            Vector f = -k*v2*v_hat;
+            node->ApplyForce(f);
+        } else {
+            node->v *= (1 - 0.01*Δt);
+        }
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
@@ -72,4 +83,5 @@ class Drag : public Constraint {
 
  private:
     Node* const node;
+    double Δt;
 };
