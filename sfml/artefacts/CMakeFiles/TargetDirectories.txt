@@ -1,0 +1,3 @@
+/git/mechanics/sfml/artefacts/CMakeFiles/CodeThing.dir
+/git/mechanics/sfml/artefacts/CMakeFiles/edit_cache.dir
+/git/mechanics/sfml/artefacts/CMakeFiles/rebuild_cache.dir
