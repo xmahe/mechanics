@@ -7,7 +7,7 @@ class Text : public sf::Drawable {
  public:
     Vector p = {0, 0};
     Text() {
-        font.loadFromFile("../Inconsolata-Medium.ttf");
+        font.loadFromFile("../resources/Inconsolata-Medium.ttf");
         text.setFont(font);
         text.setString("text");
         text.setCharacterSize(24);

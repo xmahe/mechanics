@@ -20,7 +20,7 @@ class Node : public sf::Drawable {
     
     Node(Vector p_) : p(p_) {
         _shape.setRadius(r);
-        _shape.setFillColor(sf::Color::Red);
+        _shape.setFillColor(sf::Color::Blue);
         _shape.setOrigin(r, r);
     }
 

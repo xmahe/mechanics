@@ -1,0 +1,3 @@
+/git/mechanics/artefacts/CMakeFiles/ControlChallenge.dir
+/git/mechanics/artefacts/CMakeFiles/edit_cache.dir
+/git/mechanics/artefacts/CMakeFiles/rebuild_cache.dir

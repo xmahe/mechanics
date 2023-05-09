@@ -3,6 +3,7 @@
 #include "Constraints.hpp"
 #include "ControlSystem.hpp"
 #include "Node.hpp"
+#include "Target.hpp"
 #include "Text.hpp"
 #include "Vector.hpp"
     
@@ -14,28 +15,6 @@ constexpr double Δt = 1/fps;
 
 ControlSystem control_system;
 
-class Target : public sf::Drawable {
- public:
-    Vector p = {0, 0};
-
-    Target() : Target(Vector(0, 0)) { }
-    
-    Target(Vector p_) : p(p_) {
-        _shape.setRadius(r);
-        _shape.setFillColor(sf::Color::Green);
-        _shape.setOrigin(r, r);
-    }
-
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        _shape.setPosition(p.x, p.y);
-        target.draw(_shape, states);
-    }
- private:
-    static constexpr double r = 0.03;
-    mutable sf::CircleShape _shape; // Shape variable for drawing
-};
-
-
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Magnus Mechanical Solver");
     window.setFramerateLimit(fps);
@@ -45,10 +24,10 @@ int main() {
 
     Text time_text;
     Text position_text;
+    Text score_text;
     time_text.p = {-0.8, -0.8};
     position_text.p = {-0.8, -0.7};
-
-    Target target({0.1, 0.3});
+    score_text.p = {-0.8, -0.6};
 
     {
        // Add node which can only move on a line between two points, 
@@ -72,6 +51,8 @@ int main() {
         constraints.push_back(spring);
     }
 
+    Target target({0.1, 0.317}, nodes[1]);
+
     double t = -2;
     while (window.isOpen()) {
         // Handle events
@@ -83,6 +64,7 @@ int main() {
         t += Δt;
         time_text.Set("t = " + std::to_string(t));
         position_text.Set("p.x = " + std::to_string(nodes[1]->p.x));
+        score_text.Set(target.GetScoreString());
 
         // Reset all nodes and apply forces from constraints
         for (auto node : nodes)
@@ -93,6 +75,7 @@ int main() {
         // Apply forces from control system
         double force = 0;
         if (t > 0) {
+            control_system.SetReference(target.p);
             force = control_system.Update(*nodes[0], *nodes[1]);
             if (force > +5) force = +5;
             if (force < -5) force = -5;
@@ -103,6 +86,7 @@ int main() {
         // Simulate system
         for (auto node : nodes)
             node->Simulate(Δt, t);
+        target.Update(Δt, t);
         
         // Draw everything
         window.clear();
@@ -114,6 +98,7 @@ int main() {
             window.draw(*constraint);
         window.draw(time_text);
         window.draw(position_text);
+        window.draw(score_text);
         DrawForce(window, *nodes[0], Vector(force, 0));
 
 

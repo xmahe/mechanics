@@ -30,10 +30,9 @@ class Spring : public Constraint {
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        // Draw a line indicating the constraint
         sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(a->p.x, a->p.y), {0, 200, 0}),
-            sf::Vertex(sf::Vector2f(b->p.x, b->p.y), {0, 200, 0})
+            sf::Vertex(sf::Vector2f(a->p.x, a->p.y), {0, 0, 255}),
+            sf::Vertex(sf::Vector2f(b->p.x, b->p.y), {0, 0, 255})
         };
         target.draw(line, 2, sf::Lines);
     }
